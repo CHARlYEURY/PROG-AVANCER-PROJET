@@ -25,9 +25,6 @@ public:
 
     // CONSTRUCTEUR DE VOITURE TWINGUO
     twinguo(const sf::Texture texturePath) {
-        /*if (!textureEnnemi.loadFromFile(texturePath)) {
-            throw std::runtime_error("Erreur : Impossible de charger la texture");
-        }*/
         textureEnnemi = texturePath;
         twinguos.setTexture(textureEnnemi);
         twinguos.setScale(0.5f, 0.5f); // Échelle de la voiture
@@ -53,13 +50,13 @@ public:
     bool checkCollision(const sf::Sprite& other) const {
         return twinguos.getGlobalBounds().intersects(other.getGlobalBounds());
     }
-    
+
 
     // RECUPERE LA FORME POUR L'AFFICHER
     const sf::Sprite& getShape() const {
         return twinguos;
-    }    
-    void setShape(){
+    }
+    void setShape() {
         twinguos.setTexture(textureEnnemi);
     }
 };
@@ -80,12 +77,12 @@ int main() {
 
     sf::Texture textureEnnemi;
     if (!textureEnnemi.loadFromFile("RESSOURCE/voiture6.png")) {
-            throw std::runtime_error("Erreur : Impossible de charger la texture");
+        throw std::runtime_error("Erreur : Impossible de charger la texture");
     }
     // CREATION FENETRE
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fenêtre SFML");
     window.setFramerateLimit(60);
-   
+
 
     // MUSIQUE
     sf::SoundBuffer buffer;
@@ -102,36 +99,35 @@ int main() {
 
     sf::Texture playerTexture;
     if (!playerTexture.loadFromFile("RESSOURCE/voiture5.png")) {
-        return -1; // Erreur si le fichier est introuvable
+        return -1; 
     }
 
     sf::Texture gameoverTexture;
     if (!gameoverTexture.loadFromFile("RESSOURCE/gameover.jpg")) {
-        return -1; // Erreur si le fichier est introuvable
+        return -1; 
     }
 
     sf::Texture button;
     if (!button.loadFromFile("RESSOURCE/button.png")) {
-        return -1; // Erreur si le fichier est introuvable
+        return -1; 
     }
     sf::Sprite buttonsprite;
     buttonsprite.setTexture(button);
-    buttonsprite.setScale(0.5f, 0.5f); // Réduire la taille si nécessaire
-    buttonsprite.setPosition(WINDOW_WIDTH / 2.55, WINDOW_HEIGHT / 2.95); // Position initiale
+    buttonsprite.setScale(0.5f, 0.5f); 
+    buttonsprite.setPosition(WINDOW_WIDTH / 2.55, WINDOW_HEIGHT / 2.95); 
 
-    
 
     sf::Sprite gameover;
     gameover.setTexture(gameoverTexture);
-    gameover.setScale(0.5f, 0.5f); // Réduire la taille si nécessaire
-    gameover.setPosition(WINDOW_WIDTH / 4.f, WINDOW_HEIGHT / 4); // Position initiale
+    gameover.setScale(0.5f, 0.5f); 
+    gameover.setPosition(WINDOW_WIDTH / 4.f, WINDOW_HEIGHT / 4); 
 
     sf::Sprite playerSprite;
     playerSprite.setTexture(playerTexture);
-    playerSprite.setScale(0.5f, 0.5f); // Réduire la taille si nécessaire
-    playerSprite.setPosition(WINDOW_WIDTH / 150.f, WINDOW_HEIGHT - 634.f); // Position initiale
+    playerSprite.setScale(0.5f, 0.5f); 
+    playerSprite.setPosition(WINDOW_WIDTH / 150.f, WINDOW_HEIGHT - 634.f); 
 
-    // Horloge pour la difficulté croissante
+    // Horloge pour la difficultée 
     sf::Clock difficultyClock;
 
 
@@ -187,7 +183,7 @@ int main() {
     sound.setLoop(true);
     sound.play();
 
-    
+
 
     while (window.isOpen()) {
         sf::Event event;
@@ -203,18 +199,18 @@ int main() {
 
             if (buttonsprite.getGlobalBounds().contains(mousePos)) {
                 std::cout << "Bouton Play cliqué !" << std::endl;
-                isMenuActive = false; // Quitte le menu
+                isMenuActive = false;
             }
         }
-    
 
-    // Affichage du menu
-    if (isMenuActive) {
-        window.clear();
-        window.draw(buttonsprite);
-        window.display();
-        continue; // Retourne au début de la boucle pour ne pas exécuter le jeu
-    }
+
+        // Affichage du menu
+        if (isMenuActive) {
+            window.clear();
+            window.draw(buttonsprite);
+            window.display();
+            continue; // Retourne au début de la boucle pour ne pas exécuter le jeu
+        }
 
 
 
@@ -225,12 +221,12 @@ int main() {
         if (isGameOver) {
             // Afficher l'écran "Game Over"
             window.clear();
-            window.draw(gameover); // Dessiner l'image de "Game Over"
+            window.draw(gameover); 
             window.display();
 
-            // Ajout d'un délai pour que le joueur voie l'écran (optionnel)
+            // Ajout délai
             sf::sleep(sf::seconds(5));
-            window.close(); // Ferme la fenêtre après avoir affiché l'écran "Game Over"
+            window.close(); 
             break;
         }
 
@@ -238,9 +234,10 @@ int main() {
 
         // Calcul du temps écoulé depuis le début du jeu
         float elapsedTime = difficultyClock.getElapsedTime().asSeconds();
-        // Augmenter la vitesse des éléments au fil du temps (augmentation linéaire)
-        float speedMultiplier = 0.5 + elapsedTime / 20.f;  
-        float speedMultiplierPlayer = 0.3 + elapsedTime / 40.f;  
+
+        // Augmenter la vitesse au fil du temps 
+        float speedMultiplier = 0.5 + elapsedTime / 20.f;
+        float speedMultiplierPlayer = 0.3 + elapsedTime / 40.f;
 
 
 
@@ -256,9 +253,9 @@ int main() {
         // DEPLACEMENT DES SPRITES DE LA ROUTE
         for (auto& sprite : sprites) {
             sprite.move(-12 * speedMultiplier, 0.f); // Déplace vers la gauche
-             
 
-           // Si le sprite dépasse l'écran, le réinitialiser en tenant compte de la largeur
+
+            // Si le sprite dépasse l'écran, le réinitialiser en tenant compte de la largeur
             if (sprite.getPosition().x + sprite.getGlobalBounds().width < 0) {
                 float offsetX = sprite.getPosition().x + sprite.getGlobalBounds().width; // Distance hors écran
                 sprite.setPosition(WINDOW_WIDTH + offsetX, sprite.getPosition().y);
@@ -267,13 +264,13 @@ int main() {
 
         // DEPLACEMENT DES ROADLINES
         for (auto& roadLine : roadLines) {
-            roadLine.move(-12 * speedMultiplier, 0.f);   
+            roadLine.move(-12 * speedMultiplier, 0.f);
             resetRoadLine(roadLine, NOVISIBLEborder);
         }
 
         // OBSTACLES
         if (spawnClock.getElapsedTime().asSeconds() > spawnDelay) {
-            if (obstacles.size() < 5) {  
+            if (obstacles.size() < 5) {
                 obstacles.emplace_back(textureEnnemi);
             }
             spawnClock.restart();
@@ -284,7 +281,7 @@ int main() {
             obstacle.update(11 * speedMultiplier);
             if (obstacle.checkCollision(playerSprite)) {
 
-                isGameOver = true;  // Change l'état du jeu à "Game Over"
+                isGameOver = true; 
                 break; // Stoppe la vérification des autres obstacles
 
             }
@@ -303,7 +300,7 @@ int main() {
 
     }
 
-    
+
 
     return 0;
 }
